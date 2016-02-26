@@ -52,20 +52,28 @@ yacybot:
 
 
 other :
-	git clone git@github.com:h4ck3rm1k3/sparql-client.git
-	git clone git@github.com:h4ck3rm1k3/ia-wrapper.git internetarchive
-	git clone git@github.com:h4ck3rm1k3/rdflib.git
-	git clone git@github.com:h4ck3rm1k3/sparqlwrapper.git
-	git clone git@github.com:speedydeletion/pywikibot.git speedy_deletion_bot
-	git clone git@github.com:h4ck3rm1k3/pywikipediabot.git
-	git clone git@github.com:h4ck3rm1k3/pywikibot-wikibase.git
-	git clone git@github.com:wikimedia/pywikibot-core.git
-	git clone git@github.com:h4ck3rm1k3/i18n.git
-	git clone git@github.com:h4ck3rm1k3/requests.git 
-	git clone git@github.com:h4ck3rm1k3/eventlet.git
+	git clone git@github.com:h4ck3rm1k3/sparql-client.git || echo 0
+	git clone git@github.com:h4ck3rm1k3/ia-wrapper.git internetarchive || echo 0
+	git clone git@github.com:h4ck3rm1k3/rdflib.git|| echo 0
+	git clone git@github.com:h4ck3rm1k3/sparqlwrapper.git|| echo 0
+	git clone git@github.com:speedydeletion/pywikibot.git speedy_deletion_bot|| echo 0
+	git clone git@github.com:h4ck3rm1k3/pywikipediabot.git|| echo 0
+	git clone git@github.com:h4ck3rm1k3/pywikibot-wikibase.git|| echo 0
+	git clone git@github.com:wikimedia/pywikibot-core.git|| echo 0
+	git clone git@github.com:h4ck3rm1k3/i18n.git|| echo 0
+	git clone git@github.com:h4ck3rm1k3/requests.git || echo 0
+	git clone git@github.com:h4ck3rm1k3/eventlet.git|| echo 0
+	git clone git@github.com:h4ck3rm1k3/nltk.git|| echo 0
 
-pull: pull-internetarchive pull-rdflib pull-eventlet pull-i18n pull-requests pull-sparqlwrapper
+pull: pull-internetarchive pull-rdflib pull-eventlet pull-i18n pull-requests pull-sparqlwrapper pull-nltk
 	echo	pass
+
+
+pull-nltk:
+	cd nltk && git remote add original git@github.com:nltk/nltk.git || echo done
+	cd nltk && git pull original develop
+	cd nltk && git push origin develop
+
 
 pull-rdflib:
 	cd rdflib && git remote set-url original git@github.com:RDFLib/rdflib.git || echo done
@@ -97,3 +105,9 @@ pull-sparqlwrapper:
 	cd sparqlwrapper && git pull original master
 	cd sparqlwrapper && git push origin master
 
+
+nltkdata:
+	sudo python -m nltk.downloader -d /usr/local/share/nltk_data all
+
+install_pip:
+	pip3 install -r requirements.txt  --user --upgrade
