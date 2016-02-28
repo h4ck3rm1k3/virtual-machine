@@ -1,8 +1,12 @@
 bootstrap : /usr/bin/emacs \
 	/usr/bin/git       \
 	/usr/bin/pip3      \
-	~/.emacs.d/
+	~/.emacs.d/        \
+	deps
 	echo ok, are strapped
+
+deps : PyOrgMode yacybot Wikipedia extraction opensearch  other pull  install_pip
+	echo almost done
 
 /bin/dash :
 	sudo apt-get install dash
@@ -13,16 +17,22 @@ bootstrap : /usr/bin/emacs \
 /usr/bin/git :
 	sudo apt-get install git
 
-/usr/bin/pip3 :
+/usr/bin/pip3 : install_pip_requirements
 	sudo apt-get build-dep python3-pip
-	sudo easy_install3 pip
-	sudo pip3 install -r requirements.txt  --upgrade
+
+
 
 ~/.emacs.d/ :
 	git clone git@github.com:h4ck3rm1k3/emacs.d.git ~/.emacs.d
 
-pip : s3cmd open-everything-library
+pip : /usr/local/bin/pip3 s3cmd open-everything-library
+
+install_pip_requirements:
 	sudo pip3 install -r requirements.txt
+
+/usr/local/bin/pip3:
+	sudo easy_install3 pip
+
 
 s3cmd :
 	git clone git@github.com:h4ck3rm1k3/s3cmd.git
@@ -30,7 +40,9 @@ s3cmd :
 open-everything-library:
 	git clone git@github.com:h4ck3rm1k3/open-everything-library.git python-duckduckgo
 
-deps : PyOrgMode yacybot Wikipedia extraction opensearch  other
+
+
+
 
 PyOrgMode:
 	git clone git@github.com:h4ck3rm1k3/PyOrgMode.git
@@ -105,9 +117,12 @@ pull-sparqlwrapper:
 	cd sparqlwrapper && git pull original master
 	cd sparqlwrapper && git push origin master
 
+/usr/include/python3.4m/Python.h:
+	sudo apt-get install libpython3.4-dev
 
 nltkdata:
 	sudo python -m nltk.downloader -d /usr/local/share/nltk_data all
 
-install_pip:
-	pip3 install -r requirements.txt  --user --upgrade
+install_pip: /usr/include/python3.4m/Python.h
+	#pip3 install -r requirements.txt  --user --upgrade
+	sudo pip3 install -r requirements.txt  --upgrade
