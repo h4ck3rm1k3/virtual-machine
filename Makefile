@@ -5,8 +5,11 @@ bootstrap : /usr/bin/emacs \
 	deps
 	echo ok, are strapped
 
-deps : PyOrgMode yacybot Wikipedia extraction opensearch  other pull  install_pip
+deps : PyOrgMode yacybot Wikipedia extraction opensearch  other pull  install_pip puppet
 	echo almost done
+
+puppet :
+	sudo apt-get install puppet
 
 /bin/dash :
 	sudo apt-get install dash
@@ -17,18 +20,17 @@ deps : PyOrgMode yacybot Wikipedia extraction opensearch  other pull  install_pi
 /usr/bin/git :
 	sudo apt-get install git
 
-/usr/bin/pip3 : install_pip_requirements
+/usr/bin/pip3 : install_pip
 	sudo apt-get build-dep python3-pip
-
-
 
 ~/.emacs.d/ :
 	git clone git@github.com:h4ck3rm1k3/emacs.d.git ~/.emacs.d
 
 pip : /usr/local/bin/pip3 s3cmd open-everything-library
 
-install_pip_requirements:
-	sudo pip3 install -r requirements.txt
+install_pip: /usr/include/python3.4m/Python.h
+#       pip3 install -r requirements.txt  --user --upgrade
+	sudo pip3 install --exists-action=w -r requirements.txt  --upgrade
 
 /usr/local/bin/pip3:
 	sudo easy_install3 pip
@@ -88,7 +90,7 @@ pull-nltk:
 
 
 pull-rdflib:
-	cd rdflib && git remote set-url original git@github.com:RDFLib/rdflib.git || echo done
+	cd rdflib && git remote add original git@github.com:RDFLib/rdflib.git || echo done
 	cd rdflib && git pull original master
 	cd rdflib && git push origin master
 
@@ -123,6 +125,7 @@ pull-sparqlwrapper:
 nltkdata:
 	sudo python -m nltk.downloader -d /usr/local/share/nltk_data all
 
-install_pip: /usr/include/python3.4m/Python.h
-	#pip3 install -r requirements.txt  --user --upgrade
-	sudo pip3 install -r requirements.txt  --upgrade
+
+
+runpuppet:
+	puppet apply -d -v -l console ./puppet/manifests/site.pp 
